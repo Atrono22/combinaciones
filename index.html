@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Combinaciones</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid #6c63ff;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        p {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input, textarea {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 1px solid #6c63ff;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #d1d1d1;
+        }
+
+        button {
+            background: #6c63ff;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #574b90;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .results p {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border: 1px solid #6c63ff;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #d1d1d1;
+        }
+
+        footer a {
+            color: #6c63ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Buscador de Combinaciones</h1>
+        <p>Encuentra combinaciones que sumen al objetivo deseado.</p>
+    </header>
+
+    <div class="container">
+        <label for="numbers">Ingresa tu lista de números (separados por comas):</label>
+        <textarea id="numbers" rows="5" placeholder="Ejemplo: 57, 65, 109.92, 113.84"></textarea>
+
+        <label for="target">Ingresa la suma objetivo:</label>
+        <input type="number" id="target" step="0.01" placeholder="Ejemplo: 12158.86">
+
+        <button onclick="findCombinations()">Buscar Combinaciones</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <footer>
+        <p>Creado por <a href="#">Ari Flores</a></p>
+    </footer>
+
+    <script>
+        function findCombinations() {
+            const numbersInput = document.getElementById('numbers').value;
+            const target = parseFloat(document.getElementById('target').value);
+            const resultsDiv = document.getElementById('results');
+
+            if (!numbersInput || isNaN(target)) {
+                resultsDiv.innerHTML = '<p>Por favor, ingresa números válidos y una suma objetivo.</p>';
+                return;
+            }
+
+            const numbers = numbersInput.split(',').map(num => parseFloat(num.trim())).filter(num => !isNaN(num));
+
+            if (numbers.length === 0) {
+                resultsDiv.innerHTML = '<p>Por favor, ingresa una lista válida de números.</p>';
+                return;
+            }
+
+            const combinations = [];
+
+            function findSubset(index, currentSubset, currentSum) {
+                if (currentSum === target) {
+                    combinations.push([...currentSubset]);
+                    return;
+                }
+
+                if (index >= numbers.length || currentSum > target) {
+                    return;
+                }
+
+                // Incluir el número actual
+                currentSubset.push(numbers[index]);
+                findSubset(index + 1, currentSubset, currentSum + numbers[index]);
+
+                // Excluir el número actual
+                currentSubset.pop();
+                findSubset(index + 1, currentSubset, currentSum);
+            }
+
+            findSubset(0, [], 0);
+
+            if (combinations.length > 0) {
+                resultsDiv.innerHTML = '<p>Combinaciones encontradas:</p>' + combinations.map(combo => `<p>${combo.join(' + ')} = ${target}</p>`).join('');
+            } else {
+                resultsDiv.innerHTML = '<p>No se encontraron combinaciones que sumen al objetivo.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
