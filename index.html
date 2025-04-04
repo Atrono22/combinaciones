@@ -166,8 +166,18 @@
             const target = parseFloat(document.getElementById('target').value);
             const resultsDiv = document.getElementById('results');
 
-            if (!numbersInput || isNaN(target)) {
-                resultsDiv.innerHTML = '<p>Por favor, ingresa números válidos y una suma objetivo.</p>';
+            // Limpiar resultados previos
+            resultsDiv.innerHTML = '';
+
+            // Validar entrada de números
+            if (!numbersInput.trim()) {
+                resultsDiv.innerHTML = '<p>Error: No ingresaste una lista de números.</p>';
+                return;
+            }
+
+            // Validar entrada de suma objetivo
+            if (isNaN(target)) {
+                resultsDiv.innerHTML = '<p>Error: La suma objetivo no es un número válido.</p>';
                 return;
             }
 
@@ -179,7 +189,7 @@
                 .filter(num => !isNaN(num));
 
             if (numbers.length === 0) {
-                resultsDiv.innerHTML = '<p>Por favor, ingresa una lista válida de números.</p>';
+                resultsDiv.innerHTML = '<p>Error: No se encontraron números válidos en la lista ingresada.</p>';
                 return;
             }
 
