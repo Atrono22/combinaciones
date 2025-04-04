@@ -3,102 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Combinaciones</title>
+    <title>Herramienta Contable</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
             background: url('wallpaper-8257343.png') no-repeat center center fixed;
             background-size: cover;
             color: #ffffff;
-            margin: 0;
-            padding: 0;
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 110vh;
+            justify-content: space-around;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        header {
-            background: rgba(0, 0, 0, 0.4);
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border-bottom: none;
-            position: relative;
-        }
-
-        header img {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            height: 80px;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px #000000;
-        }
-
-        p {
-            margin: 0;
+        nav a {
+            color: white;
+            text-decoration: none;
             font-size: 1.2rem;
-            text-shadow: 1px 1px 2px #000000;
+            padding: 10px;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .tab {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab.active {
+            display: block;
         }
 
         .container {
+            max-width: 800px;
+            margin: 20px auto;
             background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 90%;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-shadow: 1px 1px 2px #000000;
         }
 
         input, textarea, button {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 1rem;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            color: #ffffff;
-            text-shadow: 1px 1px 2px #000000;
-        }
-
-        input, textarea {
             background: rgba(255, 255, 255, 0.2);
-            border: 1px solid #000000;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #d1d1d1;
+            color: #ffffff;
             text-shadow: 1px 1px 2px #000000;
         }
 
         button {
             background: #000000;
-            color: #ffffff;
+            color: white;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s ease;
-            text-shadow: 1px 1px 2px #000000;
         }
 
         button:hover {
@@ -111,88 +86,71 @@
 
         .results p {
             background: rgba(0, 0, 0, 0.6);
-            padding: 15px;
-            border: 1px solid #000000;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 10px;
+            border-radius: 5px;
             text-shadow: 1px 1px 2px #000000;
-        }
-
-        footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-            color: #ffffff;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px #000000;
-        }
-
-        footer a {
-            color: #6c63ff;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Buscador de Combinaciones</h1>
-        <p>Encuentra combinaciones que sumen al objetivo deseado.</p>
-        <img src="c3a82c05257e48fd3ddad5ed6d437da0.png" alt="Logo">
-    </header>
+    <nav>
+        <a href="#" onclick="showTab('sumFinder')">Buscador de Sumas</a>
+        <a href="#" onclick="showTab('accountIntegration')">Integración de Cuentas</a>
+    </nav>
 
-    <div class="container">
-        <label for="numbers">Ingresa tu lista de números (separados por comas, espacios o saltos de línea):</label>
-        <textarea id="numbers" rows="5" placeholder="Ejemplo: 57, 65, 109.92, 113.84 o separados por espacios o líneas"></textarea>
+    <div id="sumFinder" class="tab active">
+        <div class="container">
+            <h2>Buscador de Sumas</h2>
+            <label for="numbers">Ingresa tu lista de números (separados por comas, espacios o saltos de línea):</label>
+            <textarea id="numbers" rows="5" placeholder="Ejemplo: 57, 65, 109.92, 113.84"></textarea>
 
-        <label for="target">Ingresa la suma objetivo:</label>
-        <input type="number" id="target" step="0.01" placeholder="Ejemplo: 12158.86">
+            <label for="target">Ingresa la suma objetivo:</label>
+            <input type="number" id="target" step="0.01" placeholder="Ejemplo: 12158.86">
 
-        <button onclick="findCombinations()">Buscar Combinaciones</button>
+            <button onclick="findCombinations()">Buscar Combinaciones</button>
 
-        <div class="results" id="results"></div>
+            <div class="results" id="results"></div>
+        </div>
     </div>
 
-    <footer>
-        <p>Creado por <a href="#">Ari Flores</a></p>
-    </footer>
+    <div id="accountIntegration" class="tab">
+        <div class="container">
+            <h2>Integración de Cuentas</h2>
+            <label for="fileUpload">Carga tu archivo Excel:</label>
+            <input type="file" id="fileUpload" accept=".xlsx, .xls">
 
+            <button onclick="processExcel()">Procesar Archivo</button>
+
+            <div class="results" id="integrationResults"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
         function findCombinations() {
             const numbersInput = document.getElementById('numbers').value;
             const target = parseFloat(document.getElementById('target').value);
             const resultsDiv = document.getElementById('results');
 
-            // Limpiar resultados previos
             resultsDiv.innerHTML = '';
 
-            // Validar entrada de números
-            if (!numbersInput.trim()) {
-                resultsDiv.innerHTML = '<p>Error: No ingresaste una lista de números.</p>';
+            if (!numbersInput.trim() || isNaN(target)) {
+                resultsDiv.innerHTML = '<p>Error: Ingresa números válidos y una suma objetivo.</p>';
                 return;
             }
 
-            // Validar entrada de suma objetivo
-            if (isNaN(target)) {
-                resultsDiv.innerHTML = '<p>Error: La suma objetivo no es un número válido.</p>';
-                return;
-            }
-
-            // Procesar los números con un enfoque más robusto
             const numbers = numbersInput
-                .split(/[
-]+/) // Dividir por saltos de línea
-                .map(row => row.trim().replace(/,/g, '')) // Eliminar comas y espacios extra
-                .map(num => parseFloat(num)) // Convertir a número
-                .filter(num => !isNaN(num)); // Filtrar valores no numéricos
-
-            if (numbers.length === 0) {
-                resultsDiv.innerHTML = '<p>Error: No se encontraron números válidos en la lista ingresada.</p>';
-                return;
-            }
+                .split(/[\s,
+]+/)
+                .map(num => parseFloat(num.replace(/,/g, '')))
+                .filter(num => !isNaN(num));
 
             const combinations = [];
 
@@ -206,11 +164,8 @@
                     return;
                 }
 
-                // Incluir el número actual
                 currentSubset.push(numbers[index]);
                 findSubset(index + 1, currentSubset, currentSum + numbers[index]);
-
-                // Excluir el número actual
                 currentSubset.pop();
                 findSubset(index + 1, currentSubset, currentSum);
             }
@@ -222,6 +177,32 @@
             } else {
                 resultsDiv.innerHTML = '<p>No se encontraron combinaciones que sumen al objetivo.</p>';
             }
+        }
+
+        function processExcel() {
+            const fileInput = document.getElementById('fileUpload');
+            const resultsDiv = document.getElementById('integrationResults');
+
+            if (!fileInput.files.length) {
+                resultsDiv.innerHTML = '<p>Error: Por favor, carga un archivo Excel.</p>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // Aquí se implementará la lógica de integración de cuentas
+                resultsDiv.innerHTML = '<p>Archivo procesado correctamente. (Lógica pendiente)</p>';
+            };
+
+            reader.readAsArrayBuffer(file);
         }
     </script>
 </body>
