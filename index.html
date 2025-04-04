@@ -181,10 +181,16 @@
                 return;
             }
 
-            // Procesar los números permitiendo diferentes delimitadores
-            const numbers = numbersInput
-                .split(/[,\s
-]+/) // Separar por comas, espacios o saltos de línea
+            // Procesar los números con un enfoque más robusto
+            const delimiters = [',', '\n', ' ']; // Delimitadores permitidos
+            let numbers = numbersInput;
+
+            delimiters.forEach(delimiter => {
+                numbers = numbers.split(delimiter).join(' '); // Reemplazar delimitadores por espacios
+            });
+
+            numbers = numbers
+                .split(' ') // Dividir por espacios
                 .map(num => parseFloat(num.replace(/,/g, ''))) // Eliminar comas y convertir a número
                 .filter(num => !isNaN(num));
 
