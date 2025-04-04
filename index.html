@@ -182,17 +182,12 @@
             }
 
             // Procesar los números con un enfoque más robusto
-            const delimiters = [',', '\n', ' ']; // Delimitadores permitidos
-            let numbers = numbersInput;
-
-            delimiters.forEach(delimiter => {
-                numbers = numbers.split(delimiter).join(' '); // Reemplazar delimitadores por espacios
-            });
-
-            numbers = numbers
-                .split(' ') // Dividir por espacios
-                .map(num => parseFloat(num.replace(/,/g, ''))) // Eliminar comas y convertir a número
-                .filter(num => !isNaN(num));
+            const numbers = numbersInput
+                .split(/[
+]+/) // Dividir por saltos de línea
+                .map(row => row.trim().replace(/,/g, '')) // Eliminar comas y espacios extra
+                .map(num => parseFloat(num)) // Convertir a número
+                .filter(num => !isNaN(num)); // Filtrar valores no numéricos
 
             if (numbers.length === 0) {
                 resultsDiv.innerHTML = '<p>Error: No se encontraron números válidos en la lista ingresada.</p>';
