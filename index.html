@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Combinaciones</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('wallpaper-8257343.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.4); /* Más transparente */
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid #6c63ff;
+            position: relative;
+        }
+
+        header img {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            height: 150px; /* 3 veces más grande */
+            transform: translateX(-50px); /* Mover un poco a la izquierda */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        p {
+            margin: 0;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        input, textarea {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #6c63ff;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #d1d1d1;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        button {
+            background: #6c63ff;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        button:hover {
+            background: #574b90;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .results p {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border: 1px solid #6c63ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000; /* Contorno negro */
+        }
+
+        footer a {
+            color: #6c63ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Buscador de Combinaciones</h1>
+        <p>Encuentra combinaciones que sumen al objetivo deseado.</p>
+        <img src="c3a82c05257e48fd3ddad5ed6d437da0.png" alt="Logo">
+    </header>
+
+    <div class="container">
+        <label for="numbers">Ingresa tu lista de números (separados por comas, espacios o saltos de línea):</label>
+        <textarea id="numbers" rows="5" placeholder="Ejemplo: 57, 65, 109.92, 113.84 o separados por espacios o líneas"></textarea>
+
+        <label for="target">Ingresa la suma objetivo:</label>
+        <input type="number" id="target" step="0.01" placeholder="Ejemplo: 12158.86">
+
+        <button onclick="findCombinations()">Buscar Combinaciones</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <footer>
+        <p>Creado por <a href="#">Ari Flores</a></p>
+    </footer>
+
+    <script>
+        function findCombinations() {
+            const numbersInput = document.getElementById('numbers').value;
+            const target = parseFloat(document.getElementById('target').value);
+            const resultsDiv = document.getElementById('results');
+
+            if (!numbersInput || isNaN(target)) {
+                resultsDiv.innerHTML = '<p>Por favor, ingresa números válidos y una suma objetivo.</p>';
+                return;
+            }
+
+            // Procesar los números permitiendo diferentes delimitadores
+            const numbers = numbersInput
+                .split(/[,\s
+]+/) // Separar por comas, espacios o saltos de línea
+                .map(num => parseFloat(num.replace(/,/g, ''))) // Eliminar comas y convertir a número
+                .filter(num => !isNaN(num));
+
+            if (numbers.length === 0) {
+                resultsDiv.innerHTML = '<p>Por favor, ingresa una lista válida de números.</p>';
+                return;
+            }
+
+            const combinations = [];
+
+            function findSubset(index, currentSubset, currentSum) {
+                if (currentSum === target) {
+                    combinations.push([...currentSubset]);
+                    return;
+                }
+
+                if (index >= numbers.length || currentSum > target) {
+                    return;
+                }
+
+                // Incluir el número actual
+                currentSubset.push(numbers[index]);
+                findSubset(index + 1, currentSubset, currentSum + numbers[index]);
+
+                // Excluir el número actual
+                currentSubset.pop();
+                findSubset(index + 1, currentSubset, currentSum);
+            }
+
+            findSubset(0, [], 0);
+
+            if (combinations.length > 0) {
+                resultsDiv.innerHTML = '<p>Combinaciones encontradas:</p>' + combinations.map(combo => `<p>${combo.join(' + ')} = ${target}</p>`).join('');
+            } else {
+                resultsDiv.innerHTML = '<p>No se encontraron combinaciones que sumen al objetivo.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
